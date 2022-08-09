@@ -56,25 +56,22 @@ class InfoFragment : Fragment() {
                 viewModel.infoState.collect {
 
                     when (it) {
-                        is LatestInfoUiState.Success -> itemAdapter.submitList(it.info)
-                        is LatestInfoUiState.Error -> Toast.makeText(context,
-                            getString(R.string.error),
-                            Toast.LENGTH_SHORT).show()
+                        is LatestInfoUiState.Success -> {
+                            itemAdapter.submitList(it.info)
+                            d("resourceType", "success ${it.info.size}")
+                        }
+                        is LatestInfoUiState.Error -> {
+                            Toast.makeText(context,
+                                getString(R.string.error),
+                                Toast.LENGTH_SHORT).show()
+                            d("resourceType", "error ${it.error}")
+                        }
+                        is LatestInfoUiState.Loader -> {
+                            binding!!.swipeRefresh.isRefreshing = it.isLoading
+
+                            d("resourceType", "loader ${it.isLoading}")
+                        }
                     }
-
-                    d("infoState", "${viewModel.infoState}")
-
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.loaderState.collect {
-
-                    binding!!.swipeRefresh.isRefreshing = it
-
                 }
             }
         }
@@ -100,7 +97,6 @@ class InfoFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = itemAdapter
         }
-
     }
 
     override fun onDestroyView() {

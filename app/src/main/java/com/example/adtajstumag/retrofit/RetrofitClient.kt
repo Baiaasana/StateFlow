@@ -10,16 +10,14 @@ object RetrofitClient {
 
     private const val BASE_URL = "https://run.mocky.io/v3/"
 
-    private val retrofitBuilder by lazy {
+    val retrofitBuilder by lazy {
         Retrofit
             .Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
+            .create(ApiService::class.java)
     }
-
-    fun Services() = retrofitBuilder.create(ApiService::class.java)
-
 }
 
 interface ApiService {

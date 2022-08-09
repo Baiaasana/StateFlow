@@ -1,8 +1,8 @@
 package com.example.adtajstumag
 
-import com.example.adtajstumag.data.ItemModel
+sealed class LatestInfoUiState<out T: Any> {
 
-sealed class LatestInfoUiState {
-    data class Success(val info: List<ItemModel.Item>): LatestInfoUiState()
-    data class Error(val error: String): LatestInfoUiState()
+    data class Success<out T: Any>(val info: T): LatestInfoUiState<T>()
+    data class Error(val error: String): LatestInfoUiState<Nothing>()
+    data class Loader(val isLoading: Boolean): LatestInfoUiState<Nothing>()
 }
